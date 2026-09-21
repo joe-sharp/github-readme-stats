@@ -6,7 +6,14 @@ import githubUsernameRegex from "github-username-regex";
 import { calculateRank } from "../calculateRank.js";
 import { retryer } from "../common/retryer.js";
 import { logger } from "../common/log.js";
-import { excludeRepositories } from "../common/envs.js";
+import {
+  excludeRepositories,
+  extraCommits,
+  extraPRs,
+  extraPRsMerged,
+  extraReviews,
+  extraIssues,
+} from "../common/envs.js";
 import { CustomError, MissingParamError } from "../common/error.js";
 import { wrapTextMultiline } from "../common/fmt.js";
 import { request } from "../common/http.js";
@@ -292,15 +299,17 @@ const fetchStats = async (
     stats.totalCommits = user.commits.totalCommitContributions;
   }
 
-  stats.totalPRs = user.pullRequests.totalCount;
+  stats.totalCommits += extraCommits;
+  stats.totalPRs = user.pullRequests.totalCount + extraPRs;
   if (include_merged_pull_requests) {
-    stats.totalPRsMerged = user.mergedPullRequests.totalCount;
+    stats.totalPRsMerged = user.mergedPullRequests.totalCount + extraPRsMerged;
     stats.mergedPRsPercentage =
-      (user.mergedPullRequests.totalCount / user.pullRequests.totalCount) *
-        100 || 0;
+      (stats.totalPRsMerged / stats.totalPRs) * 100 || 0;
   }
-  stats.totalReviews = user.reviews.totalPullRequestReviewContributions;
-  stats.totalIssues = user.openIssues.totalCount + user.closedIssues.totalCount;
+  stats.totalReviews =
+    user.reviews.totalPullRequestReviewContributions + extraReviews;
+  stats.totalIssues =
+    user.openIssues.totalCount + user.closedIssues.totalCount + extraIssues;
   if (include_discussions) {
     stats.totalDiscussionsStarted = user.repositoryDiscussions.totalCount;
   }

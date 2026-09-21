@@ -1035,6 +1035,11 @@ GitHub Readme Stats provides several environment variables that can be used to c
       <td>Enables fetching all starred repositories for accurate star counts, especially for users with more than 100 repositories. This may increase response times and API points usage, so it is disabled on the public instance.</td>
       <td><code>true</code> or <code>false</code></td>
     </tr>
+    <tr>
+      <td><code>EXTRA_COMMITS</code>, <code>EXTRA_PRS</code>, <code>EXTRA_PRS_MERGED</code>, <code>EXTRA_REVIEWS</code>, <code>EXTRA_ISSUES</code></td>
+      <td>Manual offsets added on top of the stats card's fetched totals, for contributions this instance's token can't see (e.g. an org whose private repos it isn't authorized to read). Each defaults to <code>0</code>.</td>
+      <td>Any non-negative integer</td>
+    </tr>
   </tbody>
 </table>
 
